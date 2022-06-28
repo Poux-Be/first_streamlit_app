@@ -12,8 +12,8 @@ import pandas as pd
 PATH = os.getcwd()
 
 # Read fruits list
-my_fruits_list = pd.read_csv(PATH + "/resources/fruit_macros.csv")
-
+# my_fruits_list = pd.read_csv(PATH + "/resources/fruit_macros.csv")
+my_fruits_list = pd.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 
 # ----- Main display -----
 streamlit.title("My Parents New Healthy Diner")
