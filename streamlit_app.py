@@ -12,7 +12,7 @@ import pandas as pd
 PATH = os.getcwd()
 
 # Read fruits list
-my_fruits_list = pd.read_csv(PATH + ".\resources\fruit_macros.csv")
+my_fruits_list = pd.read_csv(PATH + "./resources/fruit_macros.csv")
 
 
 # ----- Main display -----
