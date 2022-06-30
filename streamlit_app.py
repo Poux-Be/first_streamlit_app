@@ -19,6 +19,17 @@ PATH = os.getcwd()
 my_fruit_list = pd.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 my_fruit_list = my_fruit_list.set_index('Fruit')
 
+# Functions
+# Get fruityvice data and put it in a dataframe
+def get_fruityvice_data(this_fruit_choice):
+    # Query Fruityvice and display the response code
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+this_fruit_choice)
+
+    # Normalize the fruityvice response in a dataframe
+    fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
+
+    return(fruityvice_normalized)
+
 # ----- Main display -----
 streamlit.title("My Parents New Healthy Diner")
 
@@ -47,12 +58,8 @@ try:
         streamlit.error("Please select a fruit to get information.")
 
     else:
-        # Query Fruityvice and display the response code
-        fruityvice_response = requests.get("https://fruityvice.com/api/fruit/"+fruit_choice)
-        # Normalize the fruityvice response in a dataframe
-        fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
         # Display the dataframe
-        streamlit.dataframe(fruityvice_normalized)
+        streamlit.dataframe(get_fruityvice_data(fruit_choice))
 
 except URLError as e:
     streamlit.error()
