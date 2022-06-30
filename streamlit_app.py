@@ -8,6 +8,7 @@ import snowflake.connector
 
 import pandas as pd
 
+from urllib.error import URLError
 
 # ----- Main code -----
 # Variables
@@ -50,6 +51,9 @@ fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
 # Display the dataframe
 streamlit.dataframe(fruityvice_normalized)
 
+# Don't run anything past here while troubleshooting
+streamlit.stop()
+
 # Query snowflake
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
@@ -58,3 +62,9 @@ fruit_list = my_cur.fetchall()
 streamlit.header("The fruit list contains:")
 streamlit.dataframe(fruit_list)
 
+# Add fruit
+add_my_fruit = streamlit.text_input('What fruit would you like to add?','jackfruit')
+streamlit.write('Thanks for adding', add_my_fruit)
+
+# Inserting the fruit in the snowflake table
+my_cur.execute("insert into fruit_load_list values ('from streamlit')")
