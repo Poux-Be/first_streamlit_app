@@ -1,6 +1,7 @@
 # App file
 
 # ----- Imports -----
+from ast import Add
 import os
 import requests
 import streamlit
@@ -29,6 +30,18 @@ def get_fruityvice_data(this_fruit_choice):
     fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
 
     return(fruityvice_normalized)
+
+# Fetch the fruit list from Snowflake
+def get_fruit_load_list()
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("select * from fruit_load_list")
+        return (my_cur.fetchall())
+
+# Add a row into Snowflake
+def insert_row_snowflake(new_fruit):
+    with my_cnx.cursor() as my_cur:
+        my_cur.execute("insert into fruit_load_list values ('"+new_fruit+"')")
+        return('Thanks for adding ' + add_my_fruit)
 
 # ----- Main display -----
 streamlit.title("My Parents New Healthy Diner")
@@ -65,19 +78,21 @@ except URLError as e:
     streamlit.error()
 
 # Don't run anything past here while troubleshooting
-streamlit.stop()
+#streamlit.stop()
 
 # Query snowflake
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-my_cur = my_cnx.cursor()
-my_cur.execute("select * from fruit_load_list")
-fruit_list = my_cur.fetchall()
 streamlit.header("The fruit list contains:")
-streamlit.dataframe(fruit_list)
+# Add a button to query the fruit list
+streamlit.button("Get Fruit Load List"):
+    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+    my_data_rows = get_fruit_load_list()
+    my_cnx.close()
+    streamlit.dataframe(my_data_rows)
 
 # Add fruit
-add_my_fruit = streamlit.text_input('What fruit would you like to add?','jackfruit')
-streamlit.write('Thanks for adding', add_my_fruit)
+add_my_fruit = streamlit.text_input('What fruit would you like to add?')
 
-# Inserting the fruit in the snowflake table
-my_cur.execute("insert into fruit_load_list values ('from streamlit')")
+if streamlit.button('Add a fruit to the list'):
+    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+    streamlit.text(insert_row_snowflake(add_my_fruit))
+    my_cnx.close()
